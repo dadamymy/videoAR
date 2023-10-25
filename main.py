@@ -33,8 +33,10 @@ bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 # Compute model keypoints and its descriptors
 referenceImagePts, referenceImageDsc = orb.detectAndCompute(referenceImage, None)
 
-
-cap = cv2.VideoCapture(0)
+# on laptop
+cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+# on pc
+#cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 while True:
