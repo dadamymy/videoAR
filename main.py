@@ -1,6 +1,13 @@
 import cv2
 import numpy as np
+import distinguish_area
+import mediapipe as mp
 
+# =========================================
+mpHands = mp.solutions.hands
+hands = mpHands.Hands()
+mpDraw = mp.solutions.drawing_utils
+# =========================================
 det = 0
 detection = False
 match_mean = 0
@@ -34,9 +41,10 @@ bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 referenceImagePts, referenceImageDsc = orb.detectAndCompute(referenceImage, None)
 
 # on laptop
-cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+#cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+
 # on pc
-#cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 while True:
@@ -133,6 +141,8 @@ while True:
     # read the current frame
     _, frame = cap.read()
 
+
+
     # Compute scene keypoints and its descriptors
     sourceImagePts, sourceImageDsc = orb.detectAndCompute(frame, None)
 
@@ -166,7 +176,23 @@ while True:
 
         #This can know the object corners matrixes on camera frame
         transformedCorners = cv2.perspectiveTransform(corners, homography)
-        print(transformedCorners)
+        # print(transformedCorners)
+        # =============================
+        imgRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        result = hands.process(imgRGB)
+        if result.multi_hand_landmarks:
+            for handLms in result.multi_hand_landmarks:
+                mpDraw.draw_landmarks(frame, handLms, mpHands.HAND_CONNECTIONS)
+                for num, lm in enumerate(handLms.landmark):
+                    if num == 8:
+                        finger_m = []
+                        finger_m.append(lm.x * frame.shape[1])
+                        finger_m.append(lm.y * frame.shape[0])
+                        print(finger_m)
+                        distinguish_area.get_direction(transformedCorners, finger_m)
+                        print(f"coordinate:x{lm.x * frame.shape[1]}, y{lm.y * frame.shape[0]} ")
+        # =============================
+
 
         warp_img = cv2.warpPerspective(video_frame, homography, (frame.shape[1],frame.shape[0]))
 

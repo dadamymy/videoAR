@@ -9,18 +9,19 @@ hands = mpHands.Hands()
 mpDraw = mp.solutions.drawing_utils
 
 while True:
-    ret, img = cap.read()
+    ret, frame = cap.read()
     # print(f"frame size0:{img.shape[0]}")
     # print(f"frame size1:{img.shape[1]}")
-    imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    imgRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     result = hands.process(imgRGB)
     #print(result.multi_hand_landmarks)
     if result.multi_hand_landmarks:
         for handLms in result.multi_hand_landmarks:
-            mpDraw.draw_landmarks(img, handLms,mpHands.HAND_CONNECTIONS)
+            mpDraw.draw_landmarks(frame, handLms,mpHands.HAND_CONNECTIONS)
             for num, lm in enumerate(handLms.landmark):
                 if num == 8:
-                    print(f"coordinate:x{lm.x*img.shape[1]}, y{lm.y*img.shape[0]} ")
+                    lm.x*frame.shape[1]
+                    print(f"coordinate:x{lm.x*frame.shape[1]}, y{lm.y*frame.shape[0]} ")
 
-    cv2.imshow('img', img)
+    cv2.imshow('img', frame)
     cv2.waitKey(1)
