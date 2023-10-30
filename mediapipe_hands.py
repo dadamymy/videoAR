@@ -20,10 +20,7 @@ while True:
             mpDraw.draw_landmarks(img, handLms,mpHands.HAND_CONNECTIONS)
             for num, lm in enumerate(handLms.landmark):
                 if num == 8:
-                    print(f"coordinate X:{lm.x*img.shape[1]}, Y: {lm.y*img.shape[0]} ")
+                    print(f"coordinate:x{lm.x*img.shape[1]}, y{lm.y*img.shape[0]} ")
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
     cv2.imshow('img', img)
-cap.release()
-cv2.destroyAllWindows()
+    cv2.waitKey(1)
