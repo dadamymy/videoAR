@@ -5,7 +5,7 @@ import mediapipe as mp
 
 # =========================================
 mpHands = mp.solutions.hands
-hands = mpHands.Hands()
+hands = mpHands.Hands(max_num_hands=1)
 mpDraw = mp.solutions.drawing_utils
 # =========================================
 det = 0
@@ -41,10 +41,10 @@ bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 referenceImagePts, referenceImageDsc = orb.detectAndCompute(referenceImage, None)
 
 # on laptop
-#cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 
 # on pc
-cap = cv2.VideoCapture(0)
+#cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 while True:
@@ -196,8 +196,6 @@ while True:
                         det, detection = distinguish_area.get_direction(transformedCorners, finger_m, det)
                         #print(f"coordinate:x{lm.x * frame.shape[1]}, y{lm.y * frame.shape[0]} ")
         # =============================
-
-
         warp_img = cv2.warpPerspective(video_frame, homography, (frame.shape[1],frame.shape[0]))
 
         #mask
@@ -211,6 +209,7 @@ while True:
     # ===================== Display ====================
     # show result
     frame_counter += 1
+    cv2.imshow("video", video_frame)
     cv2.imshow("frame", frame)
     if cv2.waitKey(1) & 0xFF == ord("q"):
         break
