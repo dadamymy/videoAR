@@ -14,21 +14,21 @@ match_mean = 0
 times = 1
 # Minimum number of matches
 MIN_MATCHES = 280
-# ============== Reference Image ==============
+# ============== Reference Image Asuna ==============
 # Load reference image and convert it to gray scale
-referenceImage = cv2.imread("img/sword-art-online-12.jpg", cv2.IMREAD_GRAYSCALE)
+referenceImage = cv2.imread("img/sword-art-online-11.jpg", cv2.IMREAD_GRAYSCALE)
 h, w = referenceImage.shape[:2]
 # print(h,w)
 
-# =============== Set Video ===================
-Video_cap = cv2.VideoCapture("img/alicization-rising-steel.mp4")
+# =============== Set Video Asuna ===================
+Video_cap = cv2.VideoCapture("img/asuna.mp4")
 _, video_frame = Video_cap.read()
 
-video_cap1 = cv2.VideoCapture("img/Crossing-Field.mp4")
+video_cap1 = cv2.VideoCapture("img/happy_asuna.mp4")
 
 video_cap2 = cv2.VideoCapture("img/innocence.mp4")
 
-video_cap3 = cv2.VideoCapture("img/Courage.mp4")
+video_cap3 = cv2.VideoCapture("img/unhappy_asuna.mp4")
 
 video_cap4 = cv2.VideoCapture("img/ADAMAS.mp4")
 
@@ -41,10 +41,10 @@ bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 referenceImagePts, referenceImageDsc = orb.detectAndCompute(referenceImage, None)
 
 # on laptop
-cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+#cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 
 # on pc
-#cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 while True:
@@ -79,7 +79,7 @@ while True:
                 frame_counter = 0
                 det=0
             # make video rotate 90 degress
-            video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_CLOCKWISE)
+            # video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_CLOCKWISE)
             # make video size as big as Target Image
             video_frame = cv2.resize(video_frame, (w, h))
     elif det == "down":
@@ -138,7 +138,7 @@ while True:
                 Video_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
             # make video rotate 90 degress
-            video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_CLOCKWISE)
+            # video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_CLOCKWISE)
             # make video size as big as Target Image
             video_frame = cv2.resize(video_frame, (w, h))
 
