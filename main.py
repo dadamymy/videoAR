@@ -13,24 +13,33 @@ detection = False
 match_mean = 0
 times = 1
 # Minimum number of matches
-MIN_MATCHES = 280
+MIN_MATCHES = 260
 # ============== Reference Image Asuna ==============
 # Load reference image and convert it to gray scale
-referenceImage = cv2.imread("img/sword-art-online-11.jpg", cv2.IMREAD_GRAYSCALE)
+referenceImage = cv2.imread("img/asuna_yuuki__ref_img.jpg", cv2.IMREAD_GRAYSCALE)
 h, w = referenceImage.shape[:2]
-# print(h,w)
+
+# ============== Reference Image Kirito =============
+referenceImage_kirito = cv2.imread("img/kirito_ref_img.jpg", cv2.IMREAD_GRAYSCALE)
+h_k, w_k = referenceImage_kirito[:2]
 
 # =============== Set Video Asuna ===================
-Video_cap = cv2.VideoCapture("img/asuna.mp4")
+Video_cap = cv2.VideoCapture("img/kirito.mp4")
 _, video_frame = Video_cap.read()
 
-video_cap1 = cv2.VideoCapture("img/happy_asuna.mp4")
+video_cap1 = cv2.VideoCapture("img/happy_asuna.mp4") # Top
 
-video_cap2 = cv2.VideoCapture("img/innocence.mp4")
+video_cap2 = cv2.VideoCapture("img/innocence.mp4") # Bottom
 
-video_cap3 = cv2.VideoCapture("img/unhappy_asuna.mp4")
+video_cap3 = cv2.VideoCapture("img/unhappy_asuna.mp4") # Right
 
-video_cap4 = cv2.VideoCapture("img/ADAMAS.mp4")
+video_cap4 = cv2.VideoCapture("img/ADAMAS.mp4") # Left
+
+# =============== Set Video Kirito ===================
+Video_cap_kirito = cv2.VideoCapture("img/kirito.mp4")
+
+
+
 
 # ============== Recognize ================
 # Initiate ORB detector
@@ -39,15 +48,29 @@ orb = cv2.ORB_create(nfeatures=1000)
 bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 # Compute model keypoints and its descriptors
 referenceImagePts, referenceImageDsc = orb.detectAndCompute(referenceImage, None)
+referenceImagePts_kirito, referenceImageDsc_kirito = orb.detectAndCompute(referenceImage_kirito, None)
 
 # on laptop
-#cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(1)
 
 # on pc
-cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 while True:
+    # read the current frame
+    _, frame = cap.read()
+
+    # Compute scene keypoints and its descriptors
+    sourceImagePts, sourceImageDsc = orb.detectAndCompute(frame, None)
+
+    # Match frame descriptors with model descriptors
+    matches_asuna = bf.match(referenceImageDsc, sourceImageDsc)
+    # matches_kirito = bf.match(referenceImageDsc_kirito, sourceImageDsc)
+    # Sort them in the order of their distance
+    matches_asuna = sorted(matches_asuna, key=lambda x: x.distance)
+    # matches_kirito = sorted(matches_kirito, Key=lambda x: x.distance)
+
 
     # test press button
     # if cv2.waitKey(1) & 0xFF == ord("w"):
@@ -108,8 +131,9 @@ while True:
                 video_cap3.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
                 det=0
+                print("hi")
             # make video rotate 90 degress
-            video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_CLOCKWISE)
+            # video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_CLOCKWISE)
             # make video size as big as Target Image
             video_frame = cv2.resize(video_frame, (w, h))
     elif det == "right":
@@ -142,21 +166,8 @@ while True:
             # make video size as big as Target Image
             video_frame = cv2.resize(video_frame, (w, h))
 
-    # read the current frame
-    _, frame = cap.read()
-
-
-
-    # Compute scene keypoints and its descriptors
-    sourceImagePts, sourceImageDsc = orb.detectAndCompute(frame, None)
-
-    # Match frame descriptors with model descriptors
-    matches = bf.match(referenceImageDsc, sourceImageDsc)
-    # Sort them in the order of their distance
-    matches = sorted(matches, key=lambda x: x.distance)
-
     # Apply the homography transformation if we have enough good matches
-    if len(matches) > MIN_MATCHES:
+    if len(matches_asuna) > MIN_MATCHES:
         # match_mean+=len(matches)
         # print(f"means:{match_mean / times}\nnow:{len(matches)}")
         # times+=1
@@ -164,10 +175,10 @@ while True:
         detection = True
         # Get the good key points positions
         sourcePoints = np.float32(
-            [referenceImagePts[m.queryIdx].pt for m in matches]
+            [referenceImagePts[m.queryIdx].pt for m in matches_asuna]
         ).reshape(-1, 1, 2)
         destinationPoints = np.float32(
-            [sourceImagePts[m.trainIdx].pt for m in matches]
+            [sourceImagePts[m.trainIdx].pt for m in matches_asuna]
         ).reshape(-1, 1, 2)
         # Obtain the homography matrix
         homography, mask = cv2.findHomography(

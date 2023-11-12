@@ -46,19 +46,5 @@ def get_direction(matrices, finger_matrices,previous_det):
             print(f"distance to down= {to_down}")
             points.append(to_down)
     return previous_det, True
-    #
-    # print(points)
-    # if points:
-    #     return points.index(min(points))
-    # else:
-    #     return None
 
-# a = np.array([
-# [[480.82385, 203.52438]],
-# [[419.4287, 679.0351 ]],
-# [[878.9762, 682.68256]],
-# [[815.9293, 205.99553]]])
-# finger = [944.15428161621094, 236.58433198928833]
-# finger2 = [469.67857360839844, 258.73178243637085]
-# print(get_direction(a, finger))
 
