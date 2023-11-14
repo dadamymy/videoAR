@@ -9,8 +9,7 @@ hands = mpHands.Hands(max_num_hands=1)
 mpDraw = mp.solutions.drawing_utils
 # =========================================
 det = 0
-def fitting(frame,video_frame, matches, referenceImagePts, sourceImagePts, corners, det):
-    detection = True
+def fitting(frame,video_frame, matches, referenceImagePts, sourceImagePts, corners, det, pre_det):
     # Get the good key points positions
     sourcePoints = np.float32(
         [referenceImagePts[m.queryIdx].pt for m in matches]
@@ -39,7 +38,8 @@ def fitting(frame,video_frame, matches, referenceImagePts, sourceImagePts, corne
                     finger_m.append(lm.x * frame.shape[1])
                     finger_m.append(lm.y * frame.shape[0])
                     det, detection = distinguish_area.get_direction(transformedCorners, finger_m, det)
-                    #print(f"coordinate:x{lm.x * frame.shape[1]}, y{lm.y * frame.shape[0]} ")
+    else:
+        detection = pre_det
         # =============================
     warp_img = cv2.warpPerspective(video_frame, homography, (frame.shape[1],frame.shape[0]))
 
