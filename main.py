@@ -276,6 +276,7 @@ while True:
         elif det == 0:
             _, video_frame = Video_cap_kirito.read()
             video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+            video_frame = cv2.resize(video_frame, (w_k, h_k))
             if detection == False:
                 Video_cap_kirito.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
