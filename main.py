@@ -24,20 +24,16 @@ referenceImage_kirito = cv2.imread("img/kirito_ref_img.jpg")
 h_k, w_k = referenceImage_kirito.shape[:2]
 
 # =============== Set Video Asuna ===================
-Video_cap = cv2.VideoCapture("img/asuna.mp4")
+Video_cap = cv2.VideoCapture("img/asuna_dance.mp4")
 _, video_frame = Video_cap.read()
 
 video_cap1 = cv2.VideoCapture("img/react_asuna.mp4") # Top
-
-video_cap2 = cv2.VideoCapture("img/innocence.mp4") # Bottom
-
-video_cap3 = cv2.VideoCapture("img/asuna_glare.mp4") # Left
-
+video_cap2 = cv2.VideoCapture("img/asuna_glare.mp4") # Bottom
+video_cap3 = cv2.VideoCapture("img/asuna_smile.mp4") # Left
 video_cap4 = cv2.VideoCapture("img/happy_asuna.mp4") # Right
 
 # =============== Set Video Kirito ===================
 Video_cap_kirito = cv2.VideoCapture("img/kirito_drink_tea.mp4")
-
 
 video_cap_kirito1 = cv2.VideoCapture("img/starburst_stream.mp4") # Top
 video_cap_kirito2 = cv2.VideoCapture("img/shy_kirito.mp4") # Left
@@ -55,10 +51,10 @@ referenceImagePts, referenceImageDsc = orb.detectAndCompute(referenceImage, None
 referenceImagePts_kirito, referenceImageDsc_kirito = orb1.detectAndCompute(referenceImage_kirito, None)
 
 # on laptop
-cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+# cap = cv2.VideoCapture(1)
 
 # on pc
-# cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 while True:
@@ -114,6 +110,7 @@ while True:
         # Change Video
         if det == "up":
             _, video_frame = video_cap1.read()
+            # make video size as big as Target Image
             video_frame = cv2.resize(video_frame, (w, h))
             if detection == False:
                 video_cap1.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -127,9 +124,14 @@ while True:
                     det = 0
                     detection = False
                 else:
+                    # make video rotate 90 degress
+                    # video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_CLOCKWISE)
+                    # make video size as big as Target Image
                     video_frame = cv2.resize(video_frame, (w, h))
         elif det == "down":
             _, video_frame = video_cap2.read()
+            # make video size as big as Target Image
+            video_frame = cv2.resize(video_frame, (w, h))
             if detection == False:
                 video_cap2.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
@@ -142,13 +144,11 @@ while True:
                     det = 0
                     detection = False
                 else:
-                    # make video rotate 90 degress
-                    video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_CLOCKWISE)
                     # make video size as big as Target Image
                     video_frame = cv2.resize(video_frame, (w, h))
         elif det == "left":
             _, video_frame = video_cap3.read()
-            # make video size as big as Target Image
+            video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
             video_frame = cv2.resize(video_frame, (w, h))
             if detection == False:
                 video_cap3.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -160,6 +160,7 @@ while True:
                     video_cap3.set(cv2.CAP_PROP_POS_FRAMES, 0)
                     frame_counter = 0
                     det = 0
+                    print("hi")
                     detection = False
                 else:
                     # make video size as big as Target Image
@@ -184,6 +185,7 @@ while True:
                     video_frame = cv2.resize(video_frame, (w, h))
         elif det == 0:
             _, video_frame = Video_cap.read()
+            video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
             video_frame = cv2.resize(video_frame, (w, h))
             if detection == False:
                 Video_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -211,8 +213,8 @@ while True:
         # Change Video
         if det == "up":
             _, video_frame = video_cap_kirito1.read()
-            video_frame = cv2.resize(video_frame, (w_k, h_k))
             if detection == False:
+                print("oh")
                 video_cap_kirito1.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
                 detection = True
@@ -244,8 +246,6 @@ while True:
                     video_frame = cv2.resize(video_frame, (w_k, h_k))
         elif det == "left":
             _, video_frame = video_cap_kirito2.read()
-            # make video size as big as Target Image
-            video_frame = cv2.resize(video_frame, (w_k, h_k))
             if detection == False:
                 video_cap_kirito2.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
@@ -256,14 +256,13 @@ while True:
                     video_cap_kirito2.set(cv2.CAP_PROP_POS_FRAMES, 0)
                     frame_counter = 0
                     det = 0
+                    print("hi")
                     detection = False
                 else:
                     # make video size as big as Target Image
                     video_frame = cv2.resize(video_frame, (w_k, h_k))
         elif det == "right":
             _, video_frame = video_cap4.read()
-            # make video size as big as Target Image
-            video_frame = cv2.resize(video_frame, (w_k, h_k))
             if detection == False:
                 video_cap4.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
