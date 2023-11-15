@@ -37,6 +37,7 @@ Video_cap_kirito = cv2.VideoCapture("img/kirito_drink_tea.mp4")
 
 video_cap_kirito1 = cv2.VideoCapture("img/starburst_stream.mp4") # Top
 video_cap_kirito2 = cv2.VideoCapture("img/shy_kirito.mp4") # Left
+video_cap_kirito3 = cv2.VideoCapture("img/suprise_kirito.mp4") # Right
 
 
 # ============== Recognize ================
@@ -259,16 +260,16 @@ while True:
                     # make video size as big as Target Image
                     video_frame = cv2.resize(video_frame, (w_k, h_k))
         elif det == "right":
-            _, video_frame = video_cap4.read()
+            _, video_frame = video_cap_kirito3.read()
             # make video size as big as Target Image
             video_frame = cv2.resize(video_frame, (w_k, h_k))
             if detection == False:
-                video_cap4.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                video_cap_kirito3.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
                 detection=True
             else:
-                if frame_counter == video_cap4.get(cv2.CAP_PROP_FRAME_COUNT) - 3:
-                    video_cap4.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                if frame_counter == video_cap_kirito3.get(cv2.CAP_PROP_FRAME_COUNT) - 3:
+                    video_cap_kirito3.set(cv2.CAP_PROP_POS_FRAMES, 0)
                     frame_counter = 0
                     det = 0
                     detection = False
