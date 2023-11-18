@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from video_fit import fitting
-from ffpyplayer.player import MediaPlayer
+# from ffpyplayer.player import MediaPlayer
 
 
 a = 1
@@ -15,6 +15,14 @@ match_mean = 0
 times = 1
 # Minimum number of matches
 MIN_MATCHES = 280
+
+# on laptop
+cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+# on pc
+# cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
 # ============== Reference Image Asuna ==============
 # Load reference image and convert it to gray scale
 referenceImage = cv2.imread("img/asuna_yuuki__ref_img.jpg")
@@ -53,13 +61,6 @@ bf1 = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 referenceImagePts, referenceImageDsc = orb.detectAndCompute(referenceImage, None)
 referenceImagePts_kirito, referenceImageDsc_kirito = orb1.detectAndCompute(referenceImage_kirito, None)
 
-# on laptop
-# cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
-
-# on pc
-cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 while True:
     # read the current frame
     _, frame = cap.read()
