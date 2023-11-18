@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
-import distinguish_area
 from video_fit import fitting
+from ffpyplayer.player import MediaPlayer
+
 
 a = 1
 asuna_total= 0
@@ -224,6 +225,7 @@ while True:
                     detection = False
                 else:
                     video_frame = cv2.resize(video_frame, (w_k, h_k))
+
         elif det == "down":
             _, video_frame = video_cap_kirito4.read()
             video_frame = cv2.resize(video_frame, (w_k, h_k))
@@ -284,6 +286,7 @@ while True:
                 Video_cap_kirito.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
                 detection=True
+                # drink_sound = MediaPlayer("audio/drink_sound.m4a")
             else:
                 if frame_counter == Video_cap_kirito.get(cv2.CAP_PROP_FRAME_COUNT) - 10:
                     Video_cap_kirito.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -291,8 +294,11 @@ while True:
                     detection=False
                 else:
                     video_frame = cv2.resize(video_frame, (w_k, h_k))
+                    # drink_sound.set_pause(True)
 
         frame, video_frame, detection, det = fitting(frame, video_frame, matches_kirito, referenceImagePts_kirito, sourceImagePts, corners, det, detection)
+        # cv2.resize(video_frame, ())
+        print(det)
         cv2.imshow("video", video_frame)
         frame_counter += 1
     # ===================== Display ====================
