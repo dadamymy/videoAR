@@ -183,10 +183,19 @@ while True:
                     # make video size as big as Target Image size
                     video_frame = cv2.resize(video_frame, (w, h))
         elif det == 0:
-            _, video_frame = Video_cap.read()
-            # make video rotate 90 degress
-            video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
-            video_frame = cv2.resize(video_frame, (w, h))
+            try:
+                _, video_frame = Video_cap.read()
+                # make video rotate 90 degress
+                video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                video_frame = cv2.resize(video_frame, (w, h))
+            except:
+                Video_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                _, video_frame = Video_cap.read()
+                # make video rotate 90 degress
+                video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                video_frame = cv2.resize(video_frame, (w, h))
+                frame_counter = 0
+
             if detection == False:
                 Video_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
@@ -280,14 +289,21 @@ while True:
                     # make video size as big as Target Image
                     video_frame = cv2.resize(video_frame, (w_k, h_k))
         elif det == 0:
-            _, video_frame = Video_cap_kirito.read()
-            video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
-            video_frame = cv2.resize(video_frame, (w_k, h_k))
+            try:
+                _, video_frame = Video_cap_kirito.read()
+                video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                video_frame = cv2.resize(video_frame, (w_k, h_k))
+            except:
+                Video_cap_kirito.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                _, video_frame = Video_cap_kirito.read()
+                video_frame = cv2.rotate(video_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                video_frame = cv2.resize(video_frame, (w_k, h_k))
+                frame_counter = 0
+
             if detection == False:
                 Video_cap_kirito.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 frame_counter = 0
                 detection=True
-                # drink_sound = MediaPlayer("audio/drink_sound.m4a")
             else:
                 if frame_counter == Video_cap_kirito.get(cv2.CAP_PROP_FRAME_COUNT) - 10:
                     Video_cap_kirito.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -295,11 +311,8 @@ while True:
                     detection=False
                 else:
                     video_frame = cv2.resize(video_frame, (w_k, h_k))
-                    # drink_sound.set_pause(True)
 
         frame, video_frame, detection, det = fitting(frame, video_frame, matches_kirito, referenceImagePts_kirito, sourceImagePts, corners, det, detection)
-        # cv2.resize(video_frame, ())
-        print(det)
         cv2.imshow("video", video_frame)
         frame_counter += 1
     # ===================== Display ====================

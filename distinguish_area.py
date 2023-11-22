@@ -41,9 +41,9 @@ def get_direction(matrices, finger_matrices,previous_det):
         down_m = (down_left_y - down_right_y) / (down_left_x - down_right_x)
         down_b = down_right_y - (down_m * down_right_x)
         to_down = abs(down_m * finger_x - finger_y + down_b) / (math.sqrt(pow(down_m, 2) + pow(down_b, 2)))
-        if to_down*100 < 10:
-            return "down", False
+        if to_down*100 < 15:
             print(f"distance to down= {to_down}")
+            return "down", False
             points.append(to_down)
     return previous_det, True
 
